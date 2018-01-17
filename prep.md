@@ -273,17 +273,9 @@ Mono<Entry> entry = Mono.zip(builder, authors)
 
 (ヒント:上記のサンプルコードほぼそのままでグリーンになるはずです)
 
-### ✏️演習3: 
+### ✏️演習3: アクセストークンを使って実際のGitHub APIにアクセス
 
-[https://github.com/making/demo-blog-posts](https://github.com/making/demo-blog-posts)をフォークし、以下のプログラムで、実際にGithub APIにアクセスし、記事内容を取得できることを確認してください。
-
-``` java
-EntryFetcher entryFetcher = new EntryFetcher(new GitHubClient(WebClient.builder(),
-        new AccessToken("自分のAccess Token")));
-Mono<Entry> entry = entryFetcher.fetch("自分のGithubアカウント", "demo-blog-posts",
-        "content/00001.md");
-System.out.println(entry.block());
-```
-
+[https://github.com/making/demo-blog-posts](https://github.com/making/demo-blog-posts)をフォークし、
+[`MyGithubAccessTest`](https://github.com/making/blog-handson-prep/blob/master/src/test/java/com/example/blog/MyGithubAccessTest.java)に自分のGithubアカウントとアクセストークンを設定し、テスト結果がグリーンになるようにしてください。
 
 
