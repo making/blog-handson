@@ -136,12 +136,11 @@ Optional<Entry> entry = entryBuilder.map(builder -> builder
         .build());
 ```
 
-
 ### 演習1: `Entry`オブジェクトを作成してみる
 
 ここまでの内容を試すために、[https://github.com/making/blog-handson-prep](https://github.com/making/blog-handson-prep)を`git clone`して、
 [`EntryCreator`](https://github.com/making/blog-handson-prep/blob/master/src/main/java/com/example/blog/EntryCreator.java)を実装して、
-[`EntryCreatorTest`](https://github.com/making/blog-handson-prep/blob/master/src/test/java/com/example/blog/EntryCreatorTest.java)がグリーンになるようにしてください。
+[`EntryCreatorTest`](https://github.com/making/blog-handson-prep/blob/master/src/test/java/com/example/blog/EntryCreatorTest.java)がグリーンになるようにしてください。テストコードは修正する必要はありません。
 
 ### GitHub APIを使って、`Entry`オブジェクトを作成
 
@@ -268,6 +267,7 @@ Mono<Entry> entry = Mono.zip(builder, authors)
 ### 演習2: Mock GitHub APIにアクセスして`Entry`オブジェクトを作成してみる
 
 ここまでの内容を試すために、[`EntryFetcher`](https://github.com/making/blog-handson-prep/blob/master/src/main/java/com/example/blog/webhook/EntryFetcher.java)を実装して、
-[`EntryFetcherTest`](https://github.com/making/blog-handson-prep/blob/master/src/test/java/com/example/blog/webhook/EntryFetcherTest.java)がグリーンになるようにしてください。
+[`EntryFetcherTest`](https://github.com/making/blog-handson-prep/blob/master/src/test/java/com/example/blog/webhook/EntryFetcherTest.java)がグリーンになるようにしてください。テストコードは修正する必要はありません。
+
 
 
