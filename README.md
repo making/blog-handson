@@ -7,9 +7,15 @@ Blog APIとBlog UIという二つのWebアプリケーションを実装(穴埋�
 
 ![image](https://user-images.githubusercontent.com/106908/35030944-363f5740-fba4-11e7-88a5-b2c387eedc16.png)
 
+## 目次
+
 1. [必要なソフトウェアのインストール](install.md)
 1. [(必須!!) 事前準備](prep.md)
 1. Blog APIの実装およびデプロイ
 1. Blog UIの実装およびデプロイ
 1. PCF MetricsのTrace Exporterで分散トレーシング
 1. (時間があれば) HTML5のServer-Sent EventsとNotifications APIを使ってブログ記事の更新通知
+
+## 利用規約
+
+無断で本ドキュメントの一部または全部を改変したり、本ドキュメントを用いた二次的著作物を作成することを禁止します。ただし、ドキュメント修正のためのPull Requestは大歓迎です。
