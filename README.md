@@ -8,7 +8,7 @@ Blog APIとBlog UIという二つのWebアプリケーションを実装(穴埋�
 ![image](https://user-images.githubusercontent.com/106908/35030944-363f5740-fba4-11e7-88a5-b2c387eedc16.png)
 
 1. [必要なソフトウェアのインストール](install.md)
-1. [事前準備](prep.md)
+1. [(必須!!) 事前準備](prep.md)
 1. Blog APIの実装およびデプロイ
 1. Blog UIの実装およびデプロイ
 1. PCF MetricsのTrace Exporterで分散トレーシング
