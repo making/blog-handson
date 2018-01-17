@@ -136,7 +136,7 @@ Optional<Entry> entry = entryBuilder.map(builder -> builder
         .build());
 ```
 
-### 演習1: `Entry`オブジェクトを作成してみる
+### ✏️演習1: `Entry`オブジェクトを作成してみる
 
 ここまでの内容を試すために、[https://github.com/making/blog-handson-prep](https://github.com/making/blog-handson-prep)を`git clone`して、
 [`EntryCreator`](https://github.com/making/blog-handson-prep/blob/master/src/main/java/com/example/blog/EntryCreator.java)を実装して、
@@ -264,12 +264,12 @@ Mono<Entry> entry = Mono.zip(builder, authors)
 これでノンブロッキングでGitHub APIから`Entry`オブジェクトを作ることができました。    
 
 
-### 演習2: Mock GitHub APIにアクセスして`Entry`オブジェクトを作成してみる
+### ✏️演習2: Mock GitHub APIにアクセスして`Entry`オブジェクトを作成してみる
 
 ここまでの内容を試すために、[`EntryFetcher`](https://github.com/making/blog-handson-prep/blob/master/src/main/java/com/example/blog/webhook/EntryFetcher.java)を実装して、
 [`EntryFetcherTest`](https://github.com/making/blog-handson-prep/blob/master/src/test/java/com/example/blog/webhook/EntryFetcherTest.java)がグリーンになるようにしてください。テストコードは修正する必要はありません。
 
-### 演習3: 
+### ✏️演習3: 
 
 [https://github.com/making/demo-blog-posts](https://github.com/making/demo-blog-posts)をフォークし、以下のプログラムで、実際にGithub APIにアクセスし、記事内容を取得できることを確認してください。
 
