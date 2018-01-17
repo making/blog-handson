@@ -2,7 +2,7 @@
 
 ハンズオンで作成するブログシステムの記事のフォーマットと、そのドメインクラスである`Entry`クラスについて説明します。
 
-演習が2つありますので、ハンズオン前に必ず実施してください。
+演習が3つありますので、ハンズオン前に必ず実施してください。
 
 ### ブログ記事のフォーマット
 
@@ -268,6 +268,18 @@ Mono<Entry> entry = Mono.zip(builder, authors)
 
 ここまでの内容を試すために、[`EntryFetcher`](https://github.com/making/blog-handson-prep/blob/master/src/main/java/com/example/blog/webhook/EntryFetcher.java)を実装して、
 [`EntryFetcherTest`](https://github.com/making/blog-handson-prep/blob/master/src/test/java/com/example/blog/webhook/EntryFetcherTest.java)がグリーンになるようにしてください。テストコードは修正する必要はありません。
+
+### 演習3: 
+
+サンプルプロジェクトは[https://github.com/making/demo-blog-posts](https://github.com/making/demo-blog-posts)をフォークし、以下のプログラムで、実際にGithub APIにアクセスし、記事内容を取得できることを確認してください。
+
+``` java
+EntryFetcher entryFetcher = new EntryFetcher(new GitHubClient(WebClient.builder(),
+        new AccessToken("自分のAccess Token")));
+Mono<Entry> entry = entryFetcher.fetch("自分のGithubアカウント", "demo-blog-posts",
+        "content/00001.md");
+System.out.println(entry.block());
+```
 
 
 
