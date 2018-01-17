@@ -271,7 +271,7 @@ Mono<Entry> entry = Mono.zip(builder, authors)
 
 ### 演習3: 
 
-サンプルプロジェクトは[https://github.com/making/demo-blog-posts](https://github.com/making/demo-blog-posts)をフォークし、以下のプログラムで、実際にGithub APIにアクセスし、記事内容を取得できることを確認してください。
+[https://github.com/making/demo-blog-posts](https://github.com/making/demo-blog-posts)をフォークし、以下のプログラムで、実際にGithub APIにアクセスし、記事内容を取得できることを確認してください。
 
 ``` java
 EntryFetcher entryFetcher = new EntryFetcher(new GitHubClient(WebClient.builder(),
