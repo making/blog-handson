@@ -278,4 +278,5 @@ Mono<Entry> entry = Mono.zip(builder, authors)
 [https://github.com/making/demo-blog-posts](https://github.com/making/demo-blog-posts)をフォークし、
 [`MyGithubAccessTest`](https://github.com/making/blog-handson-prep/blob/master/src/test/java/com/example/blog/MyGithubAccessTest.java)に自分のGithubアカウントとアクセストークンを設定し、テスト結果がグリーンになるようにしてください。
 
+演習3は`EntryFetcher`実装の再確認とアクセストークンの疎通チェックを目的としています。
 
