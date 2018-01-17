@@ -142,6 +142,8 @@ Optional<Entry> entry = entryBuilder.map(builder -> builder
 [`EntryCreator`](https://github.com/making/blog-handson-prep/blob/master/src/main/java/com/example/blog/EntryCreator.java)を実装して、
 [`EntryCreatorTest`](https://github.com/making/blog-handson-prep/blob/master/src/test/java/com/example/blog/EntryCreatorTest.java)がグリーンになるようにしてください。テストコードは修正する必要はありません。
 
+(ヒント:上記のサンプルコードほぼそのままでグリーンになるはずです)
+
 ### GitHub APIを使って、`Entry`オブジェクトを作成
 
 `Entry`オブジェクトをGitHubレポジトリ上のMarkdownコンテンツから[Content API](https://developer.github.com/v3/repos/contents/)と[Commits API](https://developer.github.com/v3/repos/commits/)を使用して作成しましょう。
@@ -268,6 +270,8 @@ Mono<Entry> entry = Mono.zip(builder, authors)
 
 ここまでの内容を試すために、[`EntryFetcher`](https://github.com/making/blog-handson-prep/blob/master/src/main/java/com/example/blog/webhook/EntryFetcher.java)を実装して、
 [`EntryFetcherTest`](https://github.com/making/blog-handson-prep/blob/master/src/test/java/com/example/blog/webhook/EntryFetcherTest.java)がグリーンになるようにしてください。テストコードは修正する必要はありません。
+
+(ヒント:上記のサンプルコードほぼそのままでグリーンになるはずです)
 
 ### ✏️演習3: 
 
