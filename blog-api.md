@@ -682,7 +682,7 @@ Cloud Foundry上では`cloud`プロファイルが有効になるため、`DemoI
 
 [https://blog-api-your-account.cfapps.io/v1/entries](https://blog-api-your-account.cfapps.io/v1/entries)にアクセスすると空のリストが返ります。
 
-### MySQLのバインド
+#### MySQLのバインド
 
 バックエンドのデータベースをMySQLに切り替えます。
 
