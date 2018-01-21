@@ -680,7 +680,7 @@ buildpack: client-certificate-mapper=1.2.0_RELEASE container-security-provider=1
 
 Cloud Foundry上では`cloud`プロファイルが有効になるため、`DemoInserter`は動作しません。`entry`テーブルは空です。
 
-[https://blog-api-<your account>.cfapps.io/v1/entries](https://blog-api-<your account>.cfapps.io/v1/entries)にアクセスすると空のリストが返ります。
+[https://blog-api-your-account.cfapps.io/v1/entries](https://blog-api-your-account.cfapps.io/v1/entries)にアクセスすると空のリストが返ります。
 
 ### MySQLのバインド
 
@@ -860,11 +860,11 @@ Webhook画面に戻って、最新のWebhookが✅になっていることを確
 ![image](https://user-images.githubusercontent.com/106908/35196515-5c40daca-ff16-11e7-9d01-c438b8a10bee.png)
 
 これでデータベースが更新されているので、
-[https://blog-api-<your account>.cfapps.io/v1/entries](https://blog-api-<your account>.cfapps.io/v1/entries)にアクセスすると作成した記事が返ります。
+[https://blog-api-your-account.cfapps.io/v1/entries](https://blog-api-your-account.cfapps.io/v1/entries)にアクセスすると作成した記事が返ります。
 
 ![image](https://user-images.githubusercontent.com/106908/35196505-4599b4c2-ff16-11e7-8b39-6a4208cb6a3a.png)
 
-Github上で記事を更新すると、[https://blog-api-<your account>.cfapps.io/v1/entries](https://blog-api-<your account>.cfapps.io/v1/entries)の結果も反映されることを確認して下さい。
+Github上で記事を更新すると、[https://blog-api-your-account.cfapps.io/v1/entries](https://blog-api-your-account.cfapps.io/v1/entries)の結果も反映されることを確認して下さい。
 
 
 ### [補足] 外部のMySQLを使用する
