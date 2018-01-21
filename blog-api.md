@@ -248,6 +248,14 @@ Cloud Foundry上では`cloud`プロファイルが有効になるため、`DemoI
 
 [https://blog-api-your-account.cfapps.io/v1/entries](https://blog-api-your-account.cfapps.io/v1/entries)にアクセスすると空のリストが返ります。
 
+> `manifest.yml`に機密情報を含めたくない場合は`cf set-env`コマンドでアプリケーションに環境変数を埋め込めます。
+>
+> ```
+> cf set-env blog-api BLOG_GITHUB_ACCESS_TOKEN asdfghujiko
+> cf set-env blog-api BLOG_GITHUB_WEBHOOK_SECRET foofoo
+> cf restart blog-api
+> ```
+
 #### MySQLのバインド
 
 バックエンドのデータベースをMySQLに切り替えます。
@@ -433,5 +441,75 @@ Webhook画面に戻って、最新のWebhookが✅になっていることを確
 Github上で記事を更新すると、[https://blog-api-your-account.cfapps.io/v1/entries](https://blog-api-your-account.cfapps.io/v1/entries)の結果も反映されることを確認して下さい。
 
 ### [補足] 外部のMySQLを使用する
+
+cleardbのsparkプランは貧弱(ディスクサイズ5MB,最大接続数4)なので、他のMySQLサービスを使いたいことが多いです。外部のMySQLサービスを使う場合は、次の2通りあります。
+
+いずれにせよ、まずは`blog-api`から`blog-db`をアンバインドして、`blog-db`サービスインスタンスを削除して下さい。
+
+```
+cf unbind-service blog-api blog-db
+cf delete-service blog-db
+```
+
+#### BuildpackのSpring Auto Reconfigurationを使う場合
+
+BuildpackのSpring Auto Reconfigurationを使う場合はJDBCドライバの設定は不要で、DIコンテナ中の`Datasource`インスタンスも自動で挿し変わります。
+設定が不要で便利な一方、`DataSource`の設定を自由に行うことができません。
+
+こちらを使用する場合、User Provided Serviceを次の形式で作成して下さい。
+
+```
+cf create-user-provided-service blog-db -p '{"uri":"mysql://username:password@hostname:port/db"}'
+```
+
+このあと、再度`cf push`して下さい。
+
+#### BuildpackのSpring Auto Reconfigurationを使わない場合
+
+BuildpackのSpring Auto Reconfigurationを使わない場合はサービスインスタンスは作成せず、環境変数でDBの情報を設定します。
+また、JDBCドライバを含めてアプリケーションをビルドし直す必要があります。
+
+`pom.xml`に次の`dependency`を追加して下さい。
+
+``` xml
+<dependency>
+    <groupId>mysql</groupId>
+    <artifactId>mysql-connector-java</artifactId>
+    <scope>runtime</scope>
+</dependency>
+```
+
+アプリケーションを再度ビルドして下さい。
+
+```
+./mvnw clean package
+```
+
+`manifest.yml`の`env`にMySQLの接続情報を記述します。
+
+``` yaml
+applications:
+- name: blog-api
+  path: target/demo-blog-api-0.0.1-SNAPSHOT.jar
+  routes:
+  - route: blog-api-<your account>.cfapps.io
+  env:
+    BLOG_GITHUB_ACCESS_TOKEN: <GitHubのAccess Token>
+    BLOG_GITHUB_WEBHOOK_SECRET: <任意の値>
+    SPRING_DATASOURCE_DRIVER_CLASS_NAME: com.mysql.jdbc.Driver
+    SPRING_DATASOURCE_URL: jdbc:mysql://hostname:port/db
+    SPRING_DATASOURCE_USERNAME: user
+    SPRING_DATASOURCE_PASSWORD: password
+```
+
+このあと、再度`cf push`して下さい。
+
+> `manifest.yml`に`SPRING_DATASOURCE_PASSWORD`を含めたくない場合は、別途`cf set-env`を実行して下さい。
+>
+> ```
+> cf set-env blog-api SPRING_DATASOURCE_PASSWORD password
+> cf restart blog-api
+> ```
+
 
 ### [補足] DB更新処理を行うスレッドを指定する
