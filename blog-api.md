@@ -122,7 +122,7 @@ cd demo-blog-api
 まずはビルドして実行可能jarを作成してください。
 
 ```
-./mvn clean package
+./mvnw clean package
 ```
 
 Pivotal Web Servicesにログインをしていない場合は、次のコマンドでログインしてください。
