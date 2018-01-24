@@ -131,7 +131,7 @@ Pivotal Web Servicesにログインをしていない場合は、次のコマン
 cf login -a api.run.pivotal.io
 ```
 
-次の`manifest.yml`を作成してください。`route`の値は重複しないように自分のアカウント等を含めてください。
+次の`manifest.yml`を作成してください。`<your account>`の値は重複しないように自分のアカウント等を含めてください。
 
 ``` yaml
 applications:
