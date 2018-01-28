@@ -36,3 +36,45 @@ cf push
 ```
 
 記事の作成、更新でイベントが通知されることを確認してください。
+
+### スケールアウト対策
+
+今の実装ではBlog APIをスケールアウトした際に、WebHookがロードバランスしてしまうため、
+Server Pushをするインスタンスがラウンドロビンになってしまい、通知を受けられる場合と受けられない場合が出てしまいます。
+
+これを防ぐには、`EventNotifyer#notify`でRabbitMQやKafkaのようなMessage Brokerにメッセージを送信し、
+そのメッセージリスナーで`this.processor.onNext(event);`を実行する必要があります。
+
+
+Spring Cloud Streamを使う場合は次のような実装になるでしょう。
+
+``` java
+@Component
+public class EventNotifyer {
+	final UnicastProcessor<EntryEvent> processor = UnicastProcessor.create();
+	final Flux<EntryEvent> flux;
+	final Source source;
+
+	public EventNotifyer(Source source) {
+		this.flux = this.processor.publish().autoConnect().log("event").share();
+		this.source = source;
+	}
+
+	public void notify(EntryEvent event) {
+	    source.output().send(MessageBuilder.withPayload(event).build());
+	}
+
+    @StreamListener(Sink.INPUT)
+	public void onMessage(EntryEvent event) {
+		this.processor.onNext(event);
+	}
+
+	public Publisher<EntryEvent> publisher() {
+		return this.flux;
+	}
+
+}
+```
+
+
+[Spring Cloud Stream Tutorial](https://github.com/Pivotal-Japan/spring-cloud-stream-tutorial)を実践し、Message Broker版を実装してみてください。
