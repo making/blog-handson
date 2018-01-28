@@ -34,3 +34,5 @@ cd ../demo-blog-ui
 ./mvn clean package
 cf push
 ```
+
+記事の作成、更新でイベントが通知されることを確認してください。
