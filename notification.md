@@ -64,7 +64,7 @@ public class EventNotifyer {
 	    source.output().send(MessageBuilder.withPayload(event).build());
 	}
 
-    @StreamListener(Sink.INPUT)
+	@StreamListener(Sink.INPUT)
 	public void onMessage(EntryEvent event) {
 		this.processor.onNext(event);
 	}
