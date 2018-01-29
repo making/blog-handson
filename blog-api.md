@@ -525,7 +525,7 @@ applications:
     SPRING_DATASOURCE_PASSWORD: password
 ```
 
-このあと、再度`cf push`して下さい。
+このあと、再度`cf push`して下さい。こちらの方法のメリットはCloud Foundry(Buildpack)に依存しないPureな12 Factor Appになる点です。
 
 > `manifest.yml`に`SPRING_DATASOURCE_PASSWORD`を含めたくない場合は、別途`cf set-env`を実行して下さい。
 >
