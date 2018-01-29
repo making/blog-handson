@@ -129,3 +129,8 @@ Spring WebFlux (Netty)の場合はノンブロッキングアーキテクチャ�
 ```
 
 同じ4スレッドでもスループットはSpring WebFluxの方が高くなるはずです。
+
+> Spring WebFluxの[Router Function](https://docs.spring.io/spring-framework/docs/5.0.x/spring-framework-reference/web-reactive.html#webflux-fn)フレームワークを使えば、更に低フットプリントなSpring WebFluxアプリを作成可能です。<br>
+> 次のMaven Archetypeを使うとDIコンテナを使わずにWebアプリケーションを作成可能です。 
+> 
+> https://github.com/making/vanilla-spring-webflux-fn-blank
