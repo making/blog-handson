@@ -222,3 +222,6 @@ applications:
     JAVA_OPTS: '-XX:ReservedCodeCacheSize=32M -Xss512k -XX:+PrintCodeCache'
     JBP_CONFIG_OPEN_JDK_JRE: '[memory_calculator: {stack_threads: 24}]' # 4 (core) + 20 (etc)
 ```
+
+詳細は[Java Memory Calculatorでメモリの調節](memory-calculator.md)を参照してください。
+
