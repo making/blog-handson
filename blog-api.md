@@ -440,6 +440,29 @@ Webhook画面に戻って、最新のWebhookが✅になっていることを確
 
 Github上で記事を更新すると、[https://blog-api-your-account.cfapps.io/v1/entries](https://blog-api-your-account.cfapps.io/v1/entries)の結果も反映されることを確認して下さい。
 
+### [補足] メモリを節約する
+
+`manifest.yml`を次のように変更し、コンテナメモリサイズを512MBに減らせます。
+
+``` yaml
+applications:
+- name: blog-api
+  memory: 512m
+  path: target/demo-blog-api-0.0.1-SNAPSHOT.jar
+  routes:
+  - route: blog-api-<your account>.cfapps.io
+  env:
+    BLOG_GITHUB_ACCESS_TOKEN: <GitHubのAccess Token>
+    BLOG_GITHUB_WEBHOOK_SECRET: <任意の値>
+    SERVER_TOMCAT_MAX_THREADS: 4
+    JAVA_OPTS: '-XX:ReservedCodeCacheSize=32M -Xss512k -XX:+PrintCodeCache'
+    JBP_CONFIG_OPEN_JDK_JRE: '[memory_calculator: {stack_threads: 24}]' # 4 (tomcat) + 20 (etc)
+  services:
+  - blog-db
+```
+
+詳細は[Java Memory Calculatorでメモリの調節](memory-calculator.md)を参照してください。
+
 ### [補足] 外部のMySQLを使用する
 
 cleardbのsparkプランは貧弱(ディスクサイズ5MB,最大接続数4)なので、他のMySQLサービスを使いたいことが多いです。外部のMySQLサービスを使う場合は、次の2通りあります。
