@@ -33,7 +33,7 @@ git clone git@github.com:${GIT_USER}/demo-blog-api.git
 ![image](https://user-images.githubusercontent.com/106908/35192552-12233a84-fed8-11e7-8bdf-e946c6692d1f.png)
 
 
-### 演習1: `EntryController`の実装
+### ✏️ 演習1: `EntryController`の実装
 
 
 [`demo-blog-api/src/main/java/com/example/blog/entry/EntryController.java`](https://github.com/making/demo-blog-api/blob/master/src/main/java/com/example/blog/entry/EntryController.java)
@@ -51,7 +51,7 @@ git clone git@github.com:${GIT_USER}/demo-blog-api.git
 ![image](https://user-images.githubusercontent.com/106908/35192604-3f7a794c-fed9-11e7-9e1c-084abbc27b27.png)
 
 
-### 演習2: `WebHookController`の実装
+### ✏️ 演習2: `WebHookController`の実装
 
 [`demo-blog-api/src/main/java/com/example/blog/webhook/WebhookController.java`](https://github.com/making/demo-blog-api/blob/master/src/main/java/com/example/blog/webhook/WebhookController.java)
 
