@@ -534,5 +534,25 @@ applications:
 > cf restart blog-api
 > ```
 
+MySQLをサービスブローカーで作成しつつ、Spring Auto Reconfigurationを使わずに環境変数でDB接続情報を設定したい場合は、`cf create-service-key`でサービスインスタンスから接続情報だけ作成して表示してください。
+
+```
+$ cf create-service cleardb spark blog-db # 未作成の場合
+$ cf create-service-key blog-db blog-api-key
+$ cf service-key blog-db blog-api-key
+
+{
+ "hostname": "us-cdbr-iron-east-04.cleardb.net",
+ "jdbcUrl": "jdbc:mysql://us-cdbr-iron-east-04.cleardb.net/ad_bc365753fe5cd77?user=b746d44bae5f3a\u0026password=b5e1d9d7",
+ "name": "ad_bc365753fe5cd77",
+ "password": "b5e1d9d7",
+ "port": "3306",
+ "uri": "mysql://b746d44bae5f3a:b5e1d9d7@us-cdbr-iron-east-05.cleardb.net:3306/ad_bc365753fe5cd77?reconnect=true",
+ "username": "b746d44bae5f3a"
+}
+```
+
+得られた`uri`、`username`、`password`をそれぞれ環境変数`SPRING_DATASOURCE_URL`、`SPRING_DATASOURCE_USERNAME`、`SPRING_DATASOURCE_PASSWORD`に設定すれば良いです。`cf bind-service`は**行わないでください**。
+
 
 ### [補足] DB更新処理を行うスレッドを指定する
