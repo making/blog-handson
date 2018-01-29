@@ -28,7 +28,7 @@ git clone git@github.com:${GIT_USER}/demo-blog-ui.git
 
 ![image](https://user-images.githubusercontent.com/106908/35318337-30c69600-011e-11e8-8764-4b31ba12793c.png)
 
-### 演習3: `UiController`の実装
+### ✏️ 演習3: `UiController`の実装
 
 [demo-blog-ui/src/main/java/com/example/blog/UiController.java](https://github.com/making/demo-blog-ui/blob/master/src/main/java/com/example/blog/UiController.java)
 
@@ -66,7 +66,7 @@ blog-apiが起動した状態で、`com.example.blog.DemoBlogUiApplication`を�
 ![image](https://user-images.githubusercontent.com/106908/35318797-49006dc0-0120-11e8-8aad-6e08023be77c.png)
 
 
-### 演習4: HTMLのカスタマイズ
+### ✏️ 演習4: HTMLのカスタマイズ
 
 * 一覧画面: [demo-blog-ui/src/main/resources/templates/index.html](https://github.com/making/demo-blog-ui/blob/master/src/main/resources/templates/index.html)
 * 記事画面: [demo-blog-ui/src/main/resources/templates/entry.html](https://github.com/making/demo-blog-ui/blob/master/src/main/resources/templates/entry.html)
