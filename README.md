@@ -12,7 +12,7 @@ Blog APIとBlog UIという二つのWebアプリケーションを実装(穴埋�
 ## 目次
 
 1. [必要なソフトウェアのインストール](install.md)
-1. [(＊＊必須**) 事前準備](prep.md)
+1. [(**必須**) 事前準備](prep.md)
 1. [Blog APIの実装およびデプロイ](blog-api.md)
 1. [Blog UIの実装およびデプロイ](blog-ui.md)
 1. [Java Memory Calculatorでメモリの調節](memory-calculator.md)
