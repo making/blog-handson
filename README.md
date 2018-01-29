@@ -19,6 +19,10 @@ Blog APIとBlog UIという二つのWebアプリケーションを実装(穴埋�
 1. [HTML5のServer-Sent EventsとNotifications APIを使ってブログ記事の更新通知](notification.md)
 1. [独自ドメインの利用](create-domain.md)
 
+
+スケールアウト、ロギング、Blue/GreenデプロイなどCloud Foundryの基本的な使い方は[Cloud Foundryワークショップ資料](https://github.com/pivotal-japan/cf-workshop)を参照してください。<br>
+ConcourseによるCI/CDを実践したい場合は、[Concourseワークショップ資料](https://github.com/pivotal-japan/concourse-workshop)を参照してください。
+
 ## 利用規約
 
 無断で本ドキュメントの一部または全部を改変したり、本ドキュメントを用いた二次的著作物を作成することを禁止します。ただし、ドキュメント修正のためのPull Requestは大歓迎です。
