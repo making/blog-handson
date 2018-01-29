@@ -205,3 +205,20 @@ buildpack: client-certificate-mapper=1.2.0_RELEASE container-security-provider=1
 記事画面にもアクセスしてください。
 
 ![image](https://user-images.githubusercontent.com/106908/35319235-43c4395c-0122-11e8-95ac-c8544b49e8ff.png)
+
+### [補足] メモリを節約する
+
+`manifest.yml`を次のように変更し、コンテナメモリサイズを256MBに減らせます。
+
+``` yaml
+applications:
+- name: blog-ui
+  memory: 256m
+  path: target/demo-blog-ui-0.0.1-SNAPSHOT.jar
+  routes:
+  - route: blog-ui-<your account>.cfapps.io
+  env:
+    BLOG_API_URI: https://blog-api-<your account>.cfapps.io
+    JAVA_OPTS: '-XX:ReservedCodeCacheSize=32M -Xss512k -XX:+PrintCodeCache'
+    JBP_CONFIG_OPEN_JDK_JRE: '[memory_calculator: {stack_threads: 24}]' # 4 (core) + 20 (etc)
+```
