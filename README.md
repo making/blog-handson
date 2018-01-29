@@ -1,6 +1,8 @@
 # ブログシステム作成ハンズオン
 
 Spring Boot 2を使って下図のような自分専用ブログシステムを構築するハンズオンです。
+<br>
+**ハッシュタグ**: [#bloghol](https://twitter.com/search?f=tweets&q=%23bloghol&src=typd)
 
 Blog APIとBlog UIという二つのWebアプリケーションを実装(穴埋め)して、[Pivotal Web Services](https://run.pivotal.io/)にデプロイします。
 ブログの記事はGitHubで管理し、Webhookを使ってデータベースの更新を行います。
