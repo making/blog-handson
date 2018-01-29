@@ -1,6 +1,6 @@
 ## Java Memory Calculatorでメモリの調節
 
-[Java Buildpack](https://github.com/cloudfoundry/java-buildpack)ではJava Memory Calculatorによって自動でJVMに割り当てるメモリサイズが計算されます。
+Cloud Foundryの[Java Buildpack](https://github.com/cloudfoundry/java-buildpack)では[Java Memory Calculator](https://github.com/cloudfoundry/java-buildpack-memory-calculator)によって自動でJVMに割り当てるメモリサイズが計算されます。
 デフォルトでは次の式で計算されます。
 
 * Heap Size = Container's `memory` Size - Native Size
