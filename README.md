@@ -15,6 +15,7 @@ Blog APIとBlog UIという二つのWebアプリケーションを実装(穴埋�
 1. [Blog UIの実装およびデプロイ](blog-ui.md)
 1. [Java Memory Calculatorでメモリの調節](memory-calculator.md)
 1. [HTML5のServer-Sent EventsとNotifications APIを使ってブログ記事の更新通知](notification.md)
+1. [独自ドメインの利用](create-domain.md)
 
 ## 利用規約
 
