@@ -127,3 +127,5 @@ Spring WebFlux (Netty)の場合はノンブロッキングアーキテクチャ�
     JAVA_OPTS: '-XX:ReservedCodeCacheSize=32M -Xss512k -XX:+PrintCodeCache'
     JBP_CONFIG_OPEN_JDK_JRE: '[memory_calculator: {stack_threads: 24}]' # 4 (core) + 20 (etc)
 ```
+
+同じ4スレッドでもスループットはSpring WebFluxの方が高くなるはずです。
