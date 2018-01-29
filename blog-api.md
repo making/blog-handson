@@ -558,7 +558,7 @@ $ cf service-key blog-db blog-api-key
 ### [補足] DB更新処理を行うスレッドを指定する
 
 
-今回のケースでは大きな問題にはなりませんが、次のコードには改善点があります。
+今回のケースでは問題にはなりませんが、次のコードには改善すべき点があります。(`updated`、`deleted`も同じ)
 
 ```java
 Flux<EntryId> added = this.paths(commit.get("added"))
