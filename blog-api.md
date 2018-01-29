@@ -556,3 +556,94 @@ $ cf service-key blog-db blog-api-key
 
 
 ### [補足] DB更新処理を行うスレッドを指定する
+
+
+今回のケースでは大きな問題にはなりませんが、次のコードには改善点があります。
+
+```java
+Flux<EntryId> added = this.paths(commit.get("added"))
+        .flatMap(path -> this.entryFetcher.fetch(owner, repo, path)) // (A)
+        .doOnNext(e -> this.publisher.publishEvent(new EntryCreateEvent(e))) // (B)
+        .map(Entry::entryId);
+```
+
+`(A)`では`WebClient`を使用しているため、Reactor Nettyのイベントループスレッドプールが使用されます。
+このコードではそのまま`(B)`の処理が行われるため、`(B)`も`(A)`と同じスレッド上で実行されます。<br>
+`(B)`ではデータベースアクセスを伴うブロッキングIO処理が行われますが、Nettyのイベントループスレッドは
+ノンブロッキングIO処理を想定しており、スレッドプール数はCPU数しかありません。<br>
+もしも`(B)`の処理が同時に多数呼ばれるような状況では、この処理がスレッドプールを専有してしまい、
+本来ノンブロッキングである`(A)`の`WebClient`の処理が妨げられます。
+
+今回のケースでは`(B)`はWebHook経由でしか呼ばれないため、実質的に問題ありません。<br>
+ただし、このようにブロッキング処理がNettyのイベントループスレッドプールで実行されることを避けるには、
+明示的に`(B)`を実行するスレッドプールを指定する必要があります。
+
+Blog APIの実装では`com.example.blog.DemoBlogApiApplication`にデータベースアクセス用のスレッドプール`ThreadPoolTaskExecutor`が定義されています。
+このスレッドプール数はコネクションプール数と同じであるべきです。適切な値を設定してください。
+
+この`TaskExecutor`を`WebhookController`にインジェクションします。
+
+```java
+public class WebhookController {
+	private final EntryFetcher entryFetcher;
+	private final TaskExecutor taskExecutor; // **追加**
+	private final ApplicationEventPublisher publisher;
+	private final WebhookVerifier webhookVerifier;
+	private final ObjectMapper objectMapper;
+
+	public WebhookController(BlogProperties props, EntryFetcher entryFetcher,
+			TaskExecutor taskExecutor /** 追加 **/, ApplicationEventPublisher publisher,
+			ObjectMapper objectMapper)
+			throws NoSuchAlgorithmException, InvalidKeyException {
+		this.entryFetcher = entryFetcher;
+		this.taskExecutor = taskExecutor; // **追加**
+		this.publisher = publisher;
+		this.objectMapper = objectMapper;
+		this.webhookVerifier = new WebhookVerifier(props.getGithub().getWebhookSecret());
+	}
+	/* ... */
+}
+```
+
+そして、データベースアクセス処理の前に`publishOn`メソッドでこの`TaskExecutor`を使った`reactor.core.scheduler.Scheduler`を指定する必要があります。
+
+```java
+Flux<EntryId> added = this.paths(commit.get("added"))
+        .flatMap(path -> this.entryFetcher.fetch(owner, repo, path)) // (A)
+        .publishOn(Schedulers.fromExecutor(this.taskExecutor)) // (*)
+        .doOnNext(e -> this.publisher.publishEvent(new EntryCreateEvent(e))) // (B)
+        .map(Entry::entryId);
+```
+
+このコードの`(*)`より後のオペレーションは`publishOn`で指定した`Scheduler`で生成されるスレッド上で実行されます。
+
+> `(*)`より前のオペレーションを実行する`Scheduler`を指定したい場合は`subscribeOn`を使用してください。
+
+コード変更前はWebHookで次のログが出力されます。
+
+```
+2018-01-30 01:40:03.735 DEBUG 82098 --- [ctor-http-nio-6] r.ipc.netty.http.client.HttpClient       : [id: 0x5be4e902, L:/192.168.11.6:54511 - R:api.github.com/192.30.255.116:443] READ COMPLETE
+2018-01-30 01:40:03.766  INFO 82098 --- [ctor-http-nio-4] c.e.b.e.event.EntryCreateEventListener   : Create 497
+2018-01-30 01:40:03.766 DEBUG 82098 --- [ctor-http-nio-4] o.s.j.d.DataSourceTransactionManager     : Creating new transaction with name [com.example.blog.entry.EntryRepository.create]: PROPAGATION_REQUIRED,ISOLATION_DEFAULT; ''
+2018-01-30 01:40:03.767 DEBUG 82098 --- [ctor-http-nio-4] o.s.j.d.DataSourceTransactionManager     : Acquired Connection [HikariProxyConnection@1208355775 wrapping conn0: url=jdbc:h2:mem:testdb user=SA] for JDBC transaction
+2018-01-30 01:40:03.767 DEBUG 82098 --- [ctor-http-nio-4] o.s.j.d.DataSourceTransactionManager     : Switching JDBC Connection [HikariProxyConnection@1208355775 wrapping conn0: url=jdbc:h2:mem:testdb user=SA] to manual commit
+2018-01-30 01:40:03.767 DEBUG 82098 --- [ctor-http-nio-4] o.s.jdbc.core.JdbcTemplate               : Executing prepared SQL update
+2018-01-30 01:40:03.767 DEBUG 82098 --- [ctor-http-nio-4] o.s.jdbc.core.JdbcTemplate               : Executing prepared SQL statement [INSERT INTO entry(entry_id, title, content, created_by, created_date, last_modified_by, last_modified_date) VALUES(?, ?, ?, ?, ?, ?, ?)]
+```
+
+HTTP処理もデータベースアクセス処理も`reactor-http-nio-N`という名前のスレッド上で実行されており、Reactor Nettyのイベントループスレッド上であることがわかります。
+
+コード変更後はWebHookで次のログが出力されます
+
+```
+2018-01-30 01:42:55.583 DEBUG 82649 --- [ctor-http-nio-4] r.ipc.netty.http.client.HttpClient       : [id: 0x7c2d0c17, L:/192.168.11.6:54537 - R:api.github.com/192.30.255.117:443] READ COMPLETE
+2018-01-30 01:42:55.583  INFO 82649 --- [lTaskExecutor-4] c.e.b.e.event.EntryCreateEventListener   : Create 497
+2018-01-30 01:42:55.583 DEBUG 82649 --- [lTaskExecutor-4] o.s.j.d.DataSourceTransactionManager     : Creating new transaction with name [com.example.blog.entry.EntryRepository.create]: PROPAGATION_REQUIRED,ISOLATION_DEFAULT; ''
+2018-01-30 01:42:55.584 DEBUG 82649 --- [lTaskExecutor-4] o.s.j.d.DataSourceTransactionManager     : Acquired Connection [HikariProxyConnection@1785931203 wrapping conn0: url=jdbc:h2:mem:testdb user=SA] for JDBC transaction
+2018-01-30 01:42:55.584 DEBUG 82649 --- [lTaskExecutor-4] o.s.j.d.DataSourceTransactionManager     : Switching JDBC Connection [HikariProxyConnection@1785931203 wrapping conn0: url=jdbc:h2:mem:testdb user=SA] to manual commit
+2018-01-30 01:42:55.584 DEBUG 82649 --- [lTaskExecutor-4] o.s.jdbc.core.JdbcTemplate               : Executing prepared SQL update
+2018-01-30 01:42:55.584 DEBUG 82649 --- [lTaskExecutor-4] o.s.jdbc.core.JdbcTemplate               : Executing prepared SQL statement [INSERT INTO entry(entry_id, title, content, created_by, created_date, last_modified_by, last_modified_date) VALUES(?, ?, ?, ?, ?, ?, ?)]
+```
+
+今度はHTTP処理は`reactor-http-nio-N`スレッド上ですが、データベースアクセス処理は`threadPoolTaskExecutor-N`スレッド上で実行されています。
+これでデータベースアクセス処理にNettyのスレッドプールを使用されることを防げました。当然ですが、その分生成するスレッド数は増えるのでメモリ使用量は増えます。
