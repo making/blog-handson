@@ -474,6 +474,8 @@ cf unbind-service blog-api blog-db
 cf delete-service blog-db
 ```
 
+> 外部のMySQLサービスとしては[Cloud SQL](https://cloud.google.com/sql)の`db-f1-micro`プランがリーズナブルです。
+
 #### BuildpackのSpring Auto Reconfigurationを使う場合
 
 BuildpackのSpring Auto Reconfigurationを使う場合はJDBCドライバの設定は不要で、DIコンテナ中の`Datasource`インスタンスも自動で挿し変わります。
@@ -554,6 +556,9 @@ $ cf service-key blog-db blog-api-key
 
 得られた`uri`、`username`、`password`をそれぞれ環境変数`SPRING_DATASOURCE_URL`、`SPRING_DATASOURCE_USERNAME`、`SPRING_DATASOURCE_PASSWORD`に設定すれば良いです。`cf bind-service`は**行わないでください**。
 
+
+> Pivotal Web ServicesとRDSまたはCloud SQLをTLS通信する場合は次の記事を参照してください<br>
+> https://blog.ik.am/entries/492
 
 ### [補足] DB更新処理を行うスレッドを指定する
 
