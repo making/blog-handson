@@ -10,7 +10,7 @@ Blog UI側では`WebClient`でEventを購読して、再度HTMLにServer-Sent Ev
 
 ### Blog APIの修正
 
-https://github.com/making/demo-blog-api/commit/1479b33f91f1c1bb8ad4374861cba5f9440d7ad9
+https://github.com/making/demo-blog-api/commit/241b557d4e58ab502ec94ceaa7b4f04c37e5f074
 
 ### Blog UIの修正
 
