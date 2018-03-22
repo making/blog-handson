@@ -13,7 +13,7 @@ Cloud Foundryの[Java Buildpack](https://github.com/cloudfoundry/java-buildpack)
 * `-XX:ReservervedCodeCacheSize` ... 240MB
 * `-XX:DirectMemorySize` ... 10MB
 * `-Xss` ... 1MB
-* Number of threads ... 300 (Tomcatのデフォルト最大スレッド数200 + その他100)
+* Number of threads ... 250 (Tomcatのデフォルト最大スレッド数200 + その他50)
 
 
 ヒープサイズを意識することは多いですが、ネイティブサイズを細かく考えられる人は多くないです。
