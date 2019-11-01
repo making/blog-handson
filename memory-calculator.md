@@ -4,16 +4,16 @@ Cloud Foundryの[Java Buildpack](https://github.com/cloudfoundry/java-buildpack)
 デフォルトでは次の式で計算されます。
 
 * Heap Size = Container's `memory` Size - Native Size
-* Native Size = `-XX:MaxMetaSpaceSize` + `-XX:ReservedCodeCacheSize` + `-XX:CompressedClassSpaceSize` + `-XX:MaxDirectMemorySize` + (`-Xss` * Number of threads)
+* Native Size = `-XX:MaxMetaSpaceSize` + `-XX:ReservedCodeCacheSize` + `-XX:MaxDirectMemorySize` + (`-Xss` * Number of threads)
 
 各種JVMパラメーターはデフォルトで次の値が設定されます。
 
 * `-XX:MaxMetaSpaceSize`  ... クラスファイル数から**自動で算出**
-* `-XX:CompressedClassSpaceSize` ... クラスファイル数から**自動で算出**
+* ~`-XX:CompressedClassSpaceSize` ... クラスファイル数から**自動で算出**~ <- `CompressedClassSpaceSize`は`MaxMetaSpaceSize`に内容される
 * `-XX:ReservervedCodeCacheSize` ... 240MB
 * `-XX:DirectMemorySize` ... 10MB
 * `-Xss` ... 1MB
-* Number of threads ... 300 (Tomcatのデフォルト最大スレッド数200 + その他100)
+* Number of threads ... 250 (Tomcatのデフォルト最大スレッド数200 + その他100)
 
 
 ヒープサイズを意識することは多いですが、ネイティブサイズを細かく考えられる人は多くないです。
@@ -25,7 +25,7 @@ Java Buildpackはこのような設定項目を意識しなくても、コンテ
 一方で、ヒープサイズと`MaxMetaSpaceSize`、`CompressedClassSpaceSize`を抜いても
 
 ```
-240M + 10M + 1M * 300 = 550M
+240M + 10M + 1M * 250 = 500M
 ```
 
 のメモリが必要です。通常は768MB〜1GBを設定しないとOut of Memory Errorでアプリケーションが起動しなくなります。
@@ -48,7 +48,7 @@ Pivotal Web Servicesの無償利用期間に2GB制限があるのと、メモリ
 Pivotal Web Servicesではデフォルトのコンテナメモリサイズは1GBです。
 
 大きく減らすことができるのはスレッドに必要なメモリ数と`ReservervedCodeCacheSize`です。
-スレッド数の多くはリクエストを処理するために使用されます。デフォルトが200で想定されているため、
+スレッド数の多くはリクエストを処理するために使用されます。デフォルトが250で想定されているため、
 同時にアクセスされる数が少ないと判断できる場合はこの値を大きく減らせます。
 
 `ReservervedCodeCacheSize`はJITコンパイルの結果をキャッシュするメモリサイズです。
@@ -79,21 +79,21 @@ Spring MVC (Tomcat)の場合は、スレッド数を減らす場合に`server.to
     JBP_CONFIG_OPEN_JDK_JRE: '[memory_calculator: {stack_threads: 24}]' # 4 (tomcat) + 20 (etc)
 ```
 
-`stack_threads`はJava Memory Calculatorが計算に使用するスレッド数(デフォルト:300)です。
+`stack_threads`はJava Memory Calculatorが計算に使用するスレッド数(デフォルト:250)です。
 
-上記の設定により、`ReservedCodeCacheSize` + スレッドメモリサイズ (デフォルト: 240M + 1M * 300 = 540M)は
+上記の設定により、`ReservedCodeCacheSize` + スレッドメモリサイズ (デフォルト: 240M + 1M * 250 = 490M)は
 
 ```
 32M + 0.5M * 24 = 44M
 ```
 
-まで減らせます。これにヒープサイズを16M減らすとコンテナのメモリサイズを合計512M (540 - 44 + 16)減らすことができます。
+まで減らせます。これにヒープサイズを16M減らすとコンテナのメモリサイズを合計462M (490 - 44 + 16)減らすことができます。
 
 
 これで次のように`manifest.yml`を設定可能です。
 
 ``` yaml
-  memory: 512m
+  memory: 462m
   env:
     SERVER_TOMCAT_MAX_THREADS: 4
     JAVA_OPTS: '-XX:ReservedCodeCacheSize=32M -Xss512k -XX:+PrintCodeCache'
@@ -118,7 +118,7 @@ Spring MVC (Tomcat)の場合は、スレッド数を減らす場合に`server.to
 ### Spring WebFlux (Netty)の場合
 
 Spring WebFlux (Netty)の場合はノンブロッキングアーキテクチャであるため、元々少ないスレッド数(CPUコア数)で沢山のリクエストを同時に処理できます。
-したがって、デフォルトのスレッド数300は大きすぎでありリソースの無駄です。スレッド数は24-32で十分でしょう。
+したがって、デフォルトのスレッド数250は大きすぎでありリソースの無駄です。スレッド数は24-32で十分でしょう。
 またヒープサイズもSpring MVCに比べて減らすことができるので、次の設定を使用します。
 
 ``` yaml
