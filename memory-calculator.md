@@ -13,7 +13,7 @@ Cloud Foundryの[Java Buildpack](https://github.com/cloudfoundry/java-buildpack)
 * `-XX:ReservervedCodeCacheSize` ... 240MB
 * `-XX:DirectMemorySize` ... 10MB
 * `-Xss` ... 1MB
-* Number of threads ... 250 (Tomcatのデフォルト最大スレッド数200 + その他100)
+* Number of threads ... 250 (Tomcatのデフォルト最大スレッド数200 + その他50)
 
 
 ヒープサイズを意識することは多いですが、ネイティブサイズを細かく考えられる人は多くないです。
@@ -29,7 +29,7 @@ Java Buildpackはこのような設定項目を意識しなくても、コンテ
 ```
 
 のメモリが必要です。通常は768MB〜1GBを設定しないとOut of Memory Errorでアプリケーションが起動しなくなります。
-コンテナのメモリが1GBの場合、ヒープサイズに割かれるのはおよそ350MB程度です。
+コンテナのメモリが1GBの場合、ヒープサイズに割かれるのはおよそ350MBくらいです。
 
 実際に設定されている値は起動時のログから確認可能です。
 
